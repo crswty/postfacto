@@ -33,6 +33,7 @@ import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import Dialog from 'material-ui/Dialog';
 import Toggle from 'material-ui/Toggle';
+import { Swipeable } from 'react-touch';
 
 const React = require('react');
 const types = React.PropTypes;
@@ -73,6 +74,8 @@ class ShowRetroPage extends React.Component {
 
   constructor(props, context) {
     super(props, context);
+    this.moveToNextItemKey= this.moveToNextItemKey.bind(this);
+    this.moveToNextItemTouch = this.moveToNextItemTouch.bind(this);
     this.state = {
       isMobile: false,
       currentMobileCategory: 'happy',
@@ -152,10 +155,15 @@ class ShowRetroPage extends React.Component {
     });
   }
 
-  moveToNextItem(event) {
+  moveToNextItemKey(event) {
     if(event.target.type === "textarea") {
       return;
     }
+    const {retroId} = this.props;
+    Actions.nextRetroItem({retro_id: retroId});
+  }
+
+  moveToNextItemTouch() {
     const {retroId} = this.props;
     Actions.nextRetroItem({retro_id: retroId});
   }
@@ -265,6 +273,7 @@ class ShowRetroPage extends React.Component {
   renderMobile(retro) {
     const {config: {websocket_url}, retroId, archives} = this.props;
     return (
+      <Swipeable onSwipeLeft={this.moveToNextItemTouch}>
       <span>
                 <RetroWebsocket url={websocket_url} retro_id={retroId}/>
         {this.renderArchiveConfirmationDialog()}
@@ -291,8 +300,9 @@ class ShowRetroPage extends React.Component {
           }
           <RetroFooter/>
                 </div>
-            </span>
-    );
+              </span>
+            </Swipeable>
+            );
   }
 
     renderDesktop(retro) {
@@ -309,7 +319,7 @@ class ShowRetroPage extends React.Component {
         };
 
         const keyHandlers = {
-            'next': this.moveToNextItem.bind(this)
+            'next': this.moveToNextItemKey
         };
 
         return (
