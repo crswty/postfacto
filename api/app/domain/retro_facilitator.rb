@@ -35,7 +35,7 @@ class RetroFacilitator
     rules = NoDoneItemsRule.new(
         EndWithHappiestRule.new(
             OrderedByVoteRule.new(
-                HappyMehSadOrderRule.new
+                EqualColumnCountRule.new
             )))
 
     rules.apply(retro, retro.items)

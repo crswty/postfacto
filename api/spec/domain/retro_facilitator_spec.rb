@@ -43,10 +43,11 @@ describe RetroFacilitator do
       meh1 = Item.create!(retro: retro, description: 'meh1', category: :meh, vote_count: 1)
       sad1 = Item.create!(retro: retro, description: 'sad1', category: :sad, vote_count: 1)
       sad2 = Item.create!(retro: retro, description: 'sad2', category: :sad, vote_count: 2)
+      sad3 = Item.create!(retro: retro, description: 'sad3', category: :sad, vote_count: 1)
 
       items = RetroFacilitator.new.facilitate(retro)
 
-      expect(items).to eq([happy1, meh1, sad2, sad1, most_happy])
+      expect(items).to eq([sad2, sad1, happy1, meh1, sad3, most_happy])
     end
   end
 end

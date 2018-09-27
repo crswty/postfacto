@@ -29,21 +29,20 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-class HappyMehSadOrderRule
+class EqualColumnCountRule
   def initialize(chain = NoOpRule.new)
     @chain = chain
   end
 
   def apply(retro, items)
-    columns = split_columns(items)
-    ordered_categories = column_order(retro)
+    columns = split_columns(items.reverse)
 
     ordered_items = retro.items.map {
-      [columns[ordered_categories[0]].shift,
-       columns[ordered_categories[1]].shift,
-       columns[ordered_categories[2]].shift].compact
-    }
-    @chain.apply(retro, ordered_items.flatten)
+      [columns['sad'].shift,
+       columns['meh'].shift,
+       columns['happy'].shift]
+    }.flatten.compact.reverse
+    @chain.apply(retro, ordered_items)
   end
 
   def split_columns(items)
@@ -54,20 +53,5 @@ class HappyMehSadOrderRule
       'meh' => meh,
       'sad' => sad
     }
-  end
-
-  def column_order(retro)
-    last_category = 'sad'
-    unless retro.highlighted_item_id.nil?
-      last_category = retro.items.find(retro.highlighted_item_id).category
-    end
-
-    if last_category == 'happy'
-      ['meh', 'sad', 'happy']
-    elsif last_category == 'meh'
-      ['sad', 'happy', 'meh']
-    else
-      ['happy', 'meh', 'sad']
-    end
   end
 end

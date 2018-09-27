@@ -29,45 +29,21 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-describe HappyMehSadOrderRule do
+describe EqualColumnCountRule do
   let(:retro) {
     user = User.create!(email: 'me@example.com')
     Retro.create!(name: 'My Retro', user: user)
   }
 
-  it 'should revolve through happy, meh, sad starting from type of previously highlighted item' do
+  it 'should keep number of items in columns equal and order happy meh sad when columns equal' do
     meh1 = Item.create!(retro: retro, description: 'Meh Item 1', category: :meh, vote_count: 1)
     meh2 = Item.create!(retro: retro, description: 'Meh Item 2', category: :meh, vote_count: 1)
+    meh3 = Item.create!(retro: retro, description: 'Meh Item 3', category: :meh, vote_count: 1)
     sad1 = Item.create!(retro: retro, description: 'Sad Item 1', category: :sad, vote_count: 1)
     hap1 = Item.create!(retro: retro, description: 'Happy Item 1', category: :happy, vote_count: 1)
     hap2 = Item.create!(retro: retro, description: 'Happy Item 2', category: :happy, vote_count: 1)
-    retro.highlighted_item_id = meh1.id
 
-    items = HappyMehSadOrderRule.new.apply(retro, retro.items)
-    expect(items).to eq([sad1, hap1, meh1, hap2, meh2])
-  end
-
-  it 'should return first happy when no highlighted item' do
-    sad1 = Item.create!(retro: retro, description: 'Sad Item 1', category: :sad, vote_count: 1)
-    meh1 = Item.create!(retro: retro, description: 'Meh Item 1', category: :meh, vote_count: 1)
-    hap1 = Item.create!(retro: retro, description: 'Happy Item 1', category: :happy, vote_count: 1)
-
-    items = HappyMehSadOrderRule.new.apply(retro, retro.items)
-    expect(items).to eq([hap1, meh1, sad1])
-  end
-
-  it 'should return first meh when no happy' do
-    sad1 = Item.create!(retro: retro, description: 'Sad Item 1', category: :sad, vote_count: 1)
-    meh1 = Item.create!(retro: retro, description: 'Meh Item 1', category: :meh, vote_count: 1)
-
-    items = HappyMehSadOrderRule.new.apply(retro, retro.items)
-    expect(items).to eq([meh1, sad1])
-  end
-
-  it 'should return first sad when no happy or meh' do
-    sad1 = Item.create!(retro: retro, description: 'Sad Item 1', category: :sad, vote_count: 1)
-
-    items = HappyMehSadOrderRule.new.apply(retro, retro.items)
-    expect(items).to eq([sad1])
+    items = EqualColumnCountRule.new.apply(retro, retro.items)
+    expect(items).to eq([meh1, hap1, meh2, hap2, meh3, sad1])
   end
 end
