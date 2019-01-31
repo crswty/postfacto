@@ -28,17 +28,19 @@
 #
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-#
 
-class RetroFacilitator
-  def facilitate(retro)
-    rules = NoDoneItemsRule.new(
-        EndWithHappiestRule.new(
-          StartWithHappiestRule.new(
-            OrderedByVoteRule.new(
-                EqualColumnCountRule.new
-            ))))
+class StartWithHappiestRule
+  def initialize(chain = NoOpRule.new)
+    @chain = chain
+  end
 
-    rules.apply(retro, retro.items.to_a)
+  def apply(retro, items)
+    happiest_item = items.select { |i| i.category == 'happy' }
+                         .reduce { |most, other| most.vote_count > other.vote_count ? most : other }
+
+    if happiest_item.nil? then return items end
+
+    removed = items.reject { |i| i == happiest_item }
+    @chain.apply(retro, removed).prepend(happiest_item)
   end
 end
