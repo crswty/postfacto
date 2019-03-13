@@ -8,6 +8,11 @@ COPY . /postfacto-api
 
 RUN bundle install
 
-EXPOSE 3000
+EXPOSE 3000 443
 
-CMD ["sh", "-c", "bundle exec rake db:migrate && bundle exec rails server -b 0.0.0.0 -p 3000 -e production"]
+CMD ["sh", "-c", " \
+bundle exec rake db:migrate && \
+bundle exec rake admin:create_user && \
+bundle exec rails assets:precompile && \
+bundle exec rails server -b 0.0.0.0 -p 3000 \
+ "]

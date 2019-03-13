@@ -7,8 +7,7 @@ COPY ./ /postfacto-web
 
 RUN npm install
 
+
 EXPOSE 3000
 
 ENTRYPOINT /postfacto-web/docker-entrypoint.sh
-
-CMD ["npm", "start"]
