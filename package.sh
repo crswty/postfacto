@@ -52,6 +52,19 @@ rm -rf api/tmp/*
 cp -r api/* package/heroku/assets/api
 cp -r web/build package/heroku/assets/web/public_html
 
+# Docker
+cp -r deployment/docker package
+
+mkdir package/docker/assets
+cp -r api package/docker/assets/api
+cp -r web/build package/docker/assets/web
+cp deployment/docker/config.js package/docker/assets/web
+
+pushd package/docker
+  docker build -t=crswty/postfacto .
+  docker push crswty/postfacto
+popd
+
 # Docs
 
 cp deployment/INSTRUCTIONS.md package
