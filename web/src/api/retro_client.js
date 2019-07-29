@@ -31,9 +31,13 @@
 
 
 export default class RetroClient {
-  constructor(apiLocationGetter, tokenGetter = () => localStorage.getItem('authToken'), apiServerNotFound) {
+  constructor(apiLocationGetter, tokenGetter = () => localStorage.getItem('authToken')) {
     this.apiLocationGetter = apiLocationGetter;
     this.tokenGetter = tokenGetter;
+    this.apiServerNotFound = Function.prototype;
+  }
+
+  setApiServerNotFoundListener(apiServerNotFound) {
     this.apiServerNotFound = apiServerNotFound;
   }
 

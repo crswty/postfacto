@@ -45,7 +45,9 @@ describe('fetchJson', () => {
 
     it('dispatches apiServerNotFound', async () => {
       const apiServerNotFound = jest.fn();
-      await new RetroClient(null, null, apiServerNotFound).fetchJson('http://example.com/some-url');
+      const retroClient = new RetroClient(null, null);
+      retroClient.setApiServerNotFoundListener(apiServerNotFound);
+      await retroClient.fetchJson('http://example.com/some-url');
       expect(apiServerNotFound).toHaveBeenCalled();
     });
   });

@@ -40,7 +40,7 @@ import {ConnectedHeader} from './components/shared/header';
 import Logger from './helpers/logger';
 
 import SessionWebsocket from './components/session_websocket';
-import {setNotFound, updateWebsocketSession} from './redux/actions/main_actions';
+import {updateWebsocketSession} from './redux/actions/main_actions';
 import {retrieveConfig} from './redux/actions/api_actions';
 import makeReduxStore from './redux/store';
 import RetroClient from './api/retro_client';
@@ -50,17 +50,15 @@ const muiTheme = getMuiTheme({
   fontFamily: 'Karla',
 });
 
-let reduxStore;
 
 const router = new Grapnel({pushState: true});
 const retroClient = new RetroClient(
   () => global.Retro.config.api_base_url,
   () => localStorage.getItem('authToken'),
-  () => reduxStore.dispatch(setNotFound({api_server_not_found: true})),
 );
 
 const analyticsClient = new AnalyticsClient(() => global.Retro.config.enable_analytics);
-reduxStore = makeReduxStore(router, retroClient, analyticsClient);
+const reduxStore = makeReduxStore(router, retroClient, analyticsClient);
 
 class Application extends React.Component {
   static propTypes = {

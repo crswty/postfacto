@@ -78,6 +78,8 @@ function resetApiToken(oldRetroId, newRetroId) {
 }
 
 const ApiMiddleware = (retroClient) => (store) => (next) => (action) => {
+  retroClient.setApiServerNotFoundListener(() => store.dispatch(setNotFound({api_server_not_found: true})));
+
   if (action.type === 'RETRO_CREATE') {
     Logger.info('retroCreate');
     retroClient.createRetro(action.payload).then(([status, data]) => {
