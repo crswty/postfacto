@@ -13,7 +13,13 @@ RUN apt-get install -y zip
 RUN apt-get install -y less
 RUN apt-get install -y locales-all
 
+RUN gem install bundler
+
 COPY . /postfacto
 RUN cd /postfacto && ./deps.sh
 RUN rm -rf /postfacto
+
+WORKDIR /postfacto
+
+CMD ["/bin/bash"]
 
